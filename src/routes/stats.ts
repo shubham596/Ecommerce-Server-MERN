@@ -10,15 +10,26 @@ import {
 const app = express.Router();
 
 // route - /api/v1/dashboard/stats
-app.get("/stats", adminOnly, getDashboardStats);
+// app.get("/stats", adminOnly, getDashboardStats);
+
+// // route - /api/v1/dashboard/pie
+//  app.get("/pie", adminOnly, getPieCharts);
+
+// // route - /api/v1/dashboard/bar
+// app.get("/bar", adminOnly, getBarCharts);
+
+// // route - /api/v1/dashboard/line
+// app.get("/line", adminOnly, getLineCharts);
+
+app.get("/stats" , getDashboardStats);
 
 // route - /api/v1/dashboard/pie
- app.get("/pie", adminOnly, getPieCharts);
+ app.get("/pie" , getPieCharts);
 
 // route - /api/v1/dashboard/bar
-app.get("/bar", adminOnly, getBarCharts);
+app.get("/bar" , getBarCharts);
 
 // route - /api/v1/dashboard/line
-app.get("/line", adminOnly, getLineCharts);
+app.get("/line" , getLineCharts);
 
 export default app;

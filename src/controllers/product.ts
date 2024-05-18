@@ -92,18 +92,20 @@ export const getAdminProducts = TryCatch(async (req, res, next) => {
 
 export const newProduct = TryCatch(
   async (req: Request<{}, {}, NewProductRequestBody>, res, next) => {
-    const { name, price, stock, category,photo } = req.body;
+    const { name, price, stock, category,photo,description } = req.body;
   // console.log("agya mera bhai")
     if (!photo) return next(new ErrorHandler("Please add Photo", 400));
 
-    if (!name || !price || !stock || !category) {
+    if (!name || !price || !stock || !category || !description
+    ) {
       return next(new ErrorHandler("Please enter All Fields", 400));
     }
 
-    await Product.create({
+    const p=await Product.create({
       name,
       price,
       stock,
+      description,
       category: category.toLowerCase(),
       photo: photo,
     });
@@ -112,6 +114,7 @@ export const newProduct = TryCatch(
     invalidateCache({ product: true,admin:true });
     return res.status(201).json({
       success: true,
+      p,
       message: "Product Created Successfully",
     });
   }
@@ -121,7 +124,7 @@ export const updateProduct = TryCatch(async (req, res, next) => {
   const { id } = req.params;
   // const { name, price, stock, category } = req.body;
   // const photo = req.file;
-  const { name, price, stock, category,photo } = req.body;
+  const { name, price, stock, category,photo,description } = req.body;
   const product = await Product.findById(id);
 
   if (!product) return next(new ErrorHandler("Product Not Found", 404));
@@ -134,6 +137,7 @@ export const updateProduct = TryCatch(async (req, res, next) => {
   if (price) product.price = price;
   if (stock) product.stock = stock;
   if (category) product.category = category;
+  if (description) product.description=description;
 
   await product.save();
   invalidateCache({
@@ -177,7 +181,7 @@ export const getAllProducts = TryCatch(
     // 1,2,3,4,5,6,7,8
     // 9,10,11,12,13,14,15,16
     // 17,18,19,20,21,22,23,24
-    const limit = Number(process.env.PRODUCT_PER_PAGE) || 4;
+    const limit = Number(process.env.PRODUCT_PER_PAGE) || 6;
     const skip = (page - 1) * limit;
 
     const baseQuery: BaseQuery = {};
